@@ -8,14 +8,20 @@ if exists("syntax_on")
     syntax reset
 endif
 
-let g:colors_name="azurenight"
+let g:colors_name = "azurenight"
+let s:hicolor = v:true
 
 let save_cpo = &cpo
 set cpo&vim
 
 if has('gui_running')
-    let s:rgb_map = {
-        \ 'NONE': 'NONE',
+    " 0-15 standard xterm colors
+    " 16-256  256-color terminal palette
+    let s:color_map = {
+        \ 0: "#000000", 1: "#C00000", 2: "#008000", 3: "#808000", 
+        \ 4: "#0000C0", 5: "#C000C0", 6: "#008080", 7: "#C0C0C0",
+        \ 8: "#808080", 9: "#FF6060", 10: "#00FF00", 11: "#FFFF00",
+        \ 12: "#8080FF", 13: "#FF40FF", 14: "#00FFFF", 15: "#FFFFFF",
         \ 16: "#000000", 17: "#0C0077", 18: "#14009F", 19: "#1B00C5", 
         \ 20: "#2200E8",  21: "#2900FF", 22: "#007600", 23: "#007475", 
         \ 24: "#00739E", 25: "#0071C3", 26: "#006EE7", 27: "#006BFF", 
@@ -76,135 +82,165 @@ if has('gui_running')
         \ 244: "#929292", 245: "#9B9B9B", 246: "#A4A4A4", 247: "#ADADAD", 
         \ 248: "#B6B6B6", 249: "#BFBFBF", 250: "#C7C7C7", 251: "#D0D0D0", 
         \ 252: "#D8D8D8", 253: "#E0E0E0", 254: "#E9E9E9", 255: "#F1F1F1"
-        \ }
+    \ }
 
-    function s:hi(item, fg, bg, style)
-        let s:cmd = "hi " . a:item
-        if !empty(a:fg)
-            let s:cmd = s:cmd . " guifg=" . s:rgb_map[a:fg]
+    function! s:hi(item, fg, bg, style)
+        let l:cmd = "hi " . a:item
+        if a:fg != v:none
+            let l:cmd = l:cmd . " guifg=" . get(s:color_map, a:fg, a:fg)
         endif
-        if !empty(a:bg)
-            let s:cmd = s:cmd . " guibg=" . s:rgb_map[a:bg]
+        if a:bg != v:none
+            let l:cmd = l:cmd . " guibg=" . get(s:color_map, a:bg, a:bg) 
         endif
-        if !empty(a:style)
-            let s:cmd = s:cmd . " gui=" . a:style 
+        if a:style != v:none
+            let l:cmd = l:cmd . " gui=" . a:style 
         endif
-        exec s:cmd
+        exec l:cmd
     endfunction
 else
-    function s:hi(item, fg, bg, style)
-        let s:cmd = "hi " . a:item
-        if !empty(a:fg)
-            let s:cmd = s:cmd . " ctermfg=" . a:fg
+    function! s:hi(item, fg, bg, style)
+        let l:cmd = "hi " . a:item
+        if a:fg != v:none
+            let l:cmd = l:cmd . " ctermfg=" . a:fg
         endif
-        if !empty(a:bg)
-            let s:cmd = s:cmd . " ctermbg=" . a:bg
+        if a:bg != v:none
+            let l:cmd = l:cmd . " ctermbg=" . a:bg
         endif
-        if !empty(a:style)
-            let s:cmd = s:cmd . " cterm=" . a:style 
+        if a:style != v:none
+            let l:cmd = l:cmd . " cterm=" . a:style 
         endif
-        exec s:cmd
+        exec l:cmd
     endfunction
+
+    if &t_Co < 256
+        let s:hicolor = v:false
+    endif 
 end
 
-if &t_Co == 256
-    " Define behaviour for 256 colors
-else
-    " Define behaviour for 16 colors
-endif
+" Common for all variants
+let s:bg = 'Black'
 
-let s:bg = 233 "|234
-let s:fg = 38
-let s:const = 35
-let s:func = 33
-let s:white = 252
-let s:macro = 29
-let s:red = 124
-let s:diff = 202
-let s:diff_bg = 233
+if s:hicolor
+	let s:fg = '38'
+	let s:literal = '35'
+	let s:strong = '33'
+	let s:emph = '252'
+	let s:auto = '29'
+	let s:error = '124'
+	let s:remark = '202'
+    let s:highlight = '24'
+    let s:bar = '235'
+    let s:inactive = '243'
+    let s:active = '249'
+    let s:menu = '229'
+    let s:bad = '52'
+    let s:rare = '53'
+    let s:column = '63'
+else
+	let s:fg = "Cyan" 
+	let s:literal = "Green"
+	let s:strong = "Blue" 
+	let s:emph = "White"
+	let s:auto = "DarkGreen"
+	let s:error = "DarkRed"
+	let s:remark = "DarkYellow"
+    let s:highlight = "Blue"
+    let s:bar = "DarkGray"
+    let s:inactive = "Gray"
+    let s:active = "White"
+    let s:menu = "Yellow"
+    let s:bad = "Red"
+    let s:rare = "DarkMagenta"
+    let s:column = "DarkBlue"
+endif
 
 " basic highlight groups (:help highlight-groups)
 
 " text
 
-call s:hi('Normal', s:fg, s:bg, '')
-call s:hi('DiffChange', '', s:diff_bg, '')
-call s:hi('DiffAdd', s:diff, s:diff_bg, '')
-call s:hi('DiffText', s:diff, s:diff_bg, 'NONE')
-call s:hi('DiffDelete', '243', s:diff_bg, 'NONE')
-call s:hi('Folded', '249', s:bg, 'underline')
-call s:hi('LineNr', '242', s:bg, '')
-call s:hi('Directory', '39', s:bg, '')
-call s:hi('NonText', '229', s:bg, 'bold')
-call s:hi('SpecialKey', '229', s:bg, '')
-exe 'hi SpellBad    guifg=NONE  ctermfg=NONE ctermbg=52'
-exe 'hi SpellCap    guifg=NONE  ctermfg=NONE ctermbg=52'
-exe 'hi SpellLocal  guifg=NONE  ctermfg=NONE ctermbg=52'
-exe 'hi SpellRare   guifg=NONE  ctermfg=NONE ctermbg=53'
+call s:hi('Normal', s:fg, s:bg, v:none)
+call s:hi('DiffChange', v:none, s:bg, v:none)
+call s:hi('DiffAdd', s:remark, s:bg, v:none)
+call s:hi('DiffText', s:remark, s:bg, 'NONE')
+call s:hi('DiffDelete', s:inactive, s:bg, 'NONE')
+call s:hi('Folded', s:active, s:bg, 'underline')
+call s:hi('LineNr', s:inactive, s:bg, v:none)
+call s:hi('Directory', s:fg, s:bg, v:none)
+call s:hi('NonText', s:menu, s:bg, 'bold')
+call s:hi('SpecialKey', s:menu, s:bg, v:none)
+
+" spell-checking needs to be redefined only for terminal vim
+if !has('gui_running')
+    call s:hi('SpellBad', 'NONE', s:bad, v:none)
+    call s:hi('SpellCap', 'NONE', s:bad, v:none)
+    call s:hi('SpellLocal', 'NONE', s:bad, v:none)
+    call s:hi('SpellRare', 'NONE', s:rare, v:none)
+endif
 
 " borders / separators / menus
+" TODO: PMenu is dull and boring
 
-call s:hi('FoldColumn', 248, s:bg, 'bold')
-call s:hi('SignColumn', 248, s:bg, 'bold')
-call s:hi('Pmenu', 244, s:bg, '')
-call s:hi('PmenuSel', s:white, 240, '')
-exe 'hi PmenuSbar  guifg=NONE guibg=#555555  ctermfg='.s:bg.'  ctermbg='.s:bg
-exe 'hi PmenuThumb guifg=NONE guibg=#cccccc  ctermfg=gray      ctermbg=gray'
-call s:hi('WildMenu', s:white, 17, 'bold')
-call s:hi('VertSplit', 236, 245, '')
-call s:hi('TabLine', 230, 236, 'NONE')
-call s:hi('TabLineSel', 226, 238, 'bold')
-call s:hi('TabLineFill', s:bg, s:bg, '')
-call s:hi('StatusLine', 252, 236, 'NONE')
-call s:hi('StatusLineNC', 243, 235, 'NONE')
+call s:hi('FoldColumn', s:active, s:bg, 'bold')
+call s:hi('SignColumn', s:active, s:bg, 'bold')
+call s:hi('Pmenu', s:inactive, s:bg, v:none)
+call s:hi('PmenuSel', s:emph, s:inactive, v:none)    
+call s:hi('PmenuSbar', v:none, s:inactive, v:none)
+call s:hi('PmenuThumb', v:none, s:active, v:none)
+call s:hi('WildMenu', s:emph, s:rare, 'bold')
+call s:hi('VertSplit', s:bar, s:active, v:none)
+call s:hi('TabLine', s:menu, s:bar, 'NONE')
+call s:hi('TabLineSel', s:bar, s:menu, 'bold')
+call s:hi('TabLineFill', s:bar, s:bar, v:none)
+call s:hi('StatusLine', s:emph, s:bar, 'NONE')
+call s:hi('StatusLineNC', s:inactive, s:bar, 'NONE')
+call s:hi('ColorColumn', v:none, s:column, v:none)
 
-"hi Menu
 "hi Scrollbar
 "hi Tooltip
 
 " cursor / dynamic / other
 
-call s:hi('Cursor', s:bg, s:fg, '')
-"call s:hi('CursorIM', s:bg, s:white, 'reverse')
-call s:hi('CursorLine', '', 235, 'NONE')
-call s:hi('CursorColumn', '', 235, 'NONE')
-call s:hi('DebugStop', '', 235, 'NONE')
-call s:hi('Visual', '', 236, '')
-call s:hi('Search', '', 24, '')
-call s:hi('MatchParen', '', 24, '')
+call s:hi('Cursor', s:bg, s:fg, v:none)
+"call s:hi('CursorIM', s:bg, s:emph, 'reverse')
+call s:hi('CursorLine', v:none, s:bar, 'NONE')
+call s:hi('CursorColumn', v:none, s:bar, 'NONE')
+call s:hi('DebugStop', v:none, s:bar, 'NONE')
+call s:hi('Visual', v:none, s:bar, v:none)
+call s:hi('Search', v:none, s:highlight, v:none)
+call s:hi('MatchParen', v:none, s:highlight, v:none)
 
 "hi IncSearch
 "hi VisualNOS
 
 " listings / messages
 
-call s:hi('Title', s:red, s:bg, 'bold')
-call s:hi('ErrorMsg', 255, s:red, 'bold')
-call s:hi('ModeMsg', 229, '', '')
-call s:hi('Question', 28, s:bg, '')
-call s:hi('MoreMsg', 28, s:bg, '')
-call s:hi('WarningMsg', 229, s:bg, 'bold')
+call s:hi('Title', s:rare, v:none, 'bold')
+call s:hi('ErrorMsg', s:emph, s:error, 'bold')
+call s:hi('ModeMsg', s:menu, v:none, v:none)
+call s:hi('Question', s:menu, s:bg, v:none)
+call s:hi('MoreMsg', s:menu, s:bg, v:none)
+call s:hi('WarningMsg', s:menu, s:bg, 'bold')
 
 " syntax highlighting groups (:help group-name)
 
-call s:hi('Comment', 248, s:bg, '')
-call s:hi('Statement', s:white, s:bg, 'bold')
-call s:hi('Identifier', s:white, s:bg, 'NONE')
-call s:hi('Keyword', s:white, s:bg, '')
-call s:hi('Operator', s:white, s:bg, '')
-call s:hi('Delimiter', s:white, s:bg, '')
-call s:hi('Error', s:white, s:red, '')
-call s:hi('Function', s:func, s:bg, '')
-call s:hi('Todo', s:diff, s:bg, 'bold')
+call s:hi('Comment', s:active, s:bg, v:none)
+call s:hi('Statement', s:emph, s:bg, 'bold')
+call s:hi('Identifier', s:emph, s:bg, 'NONE')
+call s:hi('Keyword', s:emph, s:bg, 'NONE')
+call s:hi('Operator', s:emph, s:bg, v:none)
+call s:hi('Delimiter', s:emph, s:bg, v:none)
+call s:hi('Error', s:emph, s:error, v:none)
+call s:hi('Function', s:strong, s:bg, v:none)
+call s:hi('Todo', s:remark, s:bg, 'bold')
 call s:hi('Underlined', s:fg, s:bg, 'underline')
-call s:hi('Ignore', 238, s:bg, '')
-call s:hi('Constant', s:const, s:bg, '')
-call s:hi('Number',   s:const, s:bg, '')
-call s:hi('Special',  229, s:bg, '')
-call s:hi('PreProc',  s:macro, s:bg, '')
-call s:hi('Macro',    s:macro, s:bg, '')
-call s:hi('StorageClass', s:white, s:bg, 'bold')
-call s:hi('Structure', s:white, s:bg, 'bold')
-call s:hi('Type', s:white, s:bg, 'NONE')
+call s:hi('Ignore', s:bar, s:bg, v:none)
+call s:hi('Constant', s:literal, s:bg, v:none)
+call s:hi('Number',   s:literal, s:bg, v:none)
+call s:hi('Special',  s:menu, s:bg, v:none)
+call s:hi('PreProc',  s:auto, s:bg, v:none)
+call s:hi('Macro',    s:auto, s:bg, v:none)
+call s:hi('StorageClass', s:emph, s:bg, 'bold')
+call s:hi('Structure', s:emph, s:bg, 'bold')
+call s:hi('Type', s:emph, s:bg, 'NONE')
 
 let &cpo = save_cpo

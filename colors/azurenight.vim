@@ -1,4 +1,4 @@
-" Vim color file -- azurenight
+" vim color file -- azurenight
 " Maintainer: farsil
 
 " only works with dark background
@@ -246,5 +246,6 @@ call s:hi('MatchParen', v:none, s:highlight, v:none)
 "CursorIM
 "IncSearch
 "VisualNOS
-"
+
+" restore compatibility settings
 let &cpo = save_cpo

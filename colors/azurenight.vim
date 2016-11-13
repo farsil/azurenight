@@ -17,13 +17,13 @@ set cpo&vim
 let g:colors_name = "azurenight"
 
 if has('gui_running')
-    " 0-15 standard xterm colors
+    " 0-15 standard color names
     " 16-256  256-color terminal palette
     let s:color_map = {
-        \ 0: "#000000", 1: "#C00000", 2: "#008000", 3: "#808000", 
-        \ 4: "#0000C0", 5: "#C000C0", 6: "#008080", 7: "#C0C0C0",
-        \ 8: "#808080", 9: "#FF6060", 10: "#00FF00", 11: "#FFFF00",
-        \ 12: "#8080FF", 13: "#FF40FF", 14: "#00FFFF", 15: "#FFFFFF",
+        \ 0: "Black", 1: "DarkRed", 2: "DarkGreen", 3: "DarkYellow",
+        \ 4: "DarkBlue", 5: "DarkMagenta", 6: "DarkCyan", 7: "Grey",
+        \ 8: "DarkGray", 9: "Red", 10: "Green", 11: "Yellow",
+        \ 12: "Blue", 13: "Magenta", 14: "Cyan", 15: "White",
         \ 16: "#000000", 17: "#0C0077", 18: "#14009F", 19: "#1B00C5", 
         \ 20: "#2200E8",  21: "#2900FF", 22: "#007600", 23: "#007475", 
         \ 24: "#00739E", 25: "#0071C3", 26: "#006EE7", 27: "#006BFF", 

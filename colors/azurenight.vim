@@ -9,7 +9,10 @@ if exists("syntax_on")
 endif
 
 let g:colors_name = "azurenight"
-let s:hicolor = v:true
+let s:colors = 256
+
+let s:hi_bold = 'bold'
+let s:hi_underline = 'underline'
 
 let save_cpo = &cpo
 set cpo&vim
@@ -112,62 +115,75 @@ else
         exec l:cmd
     endfunction
 
-    if &t_Co < 256
-        let s:hicolor = v:false
-    endif 
+    let s:colors = &t_Co
 end
 
-" Common for all variants
-let s:bg = 'Black'
-
-if s:hicolor
-	let s:fg = '38'
-	let s:literal = '35'
-	let s:strong = '33'
-	let s:emph = '252'
-	let s:auto = '29'
-	let s:error = '124'
-	let s:remark = '202'
+if s:colors >= 256
+    let s:fg = '38'
+    let s:bg = '233'
+    let s:literal = '35'
+    let s:strong = '33'
+    let s:emph = '252'
+    let s:dim = '248'
+    let s:auto = '29'
+    let s:error = '124'
+    let s:remark = '202'
     let s:highlight = '24'
     let s:bar = '235'
     let s:inactive = '243'
     let s:active = '249'
-    let s:menu = '229'
+    let s:menu = '39'
+    let s:special = '229'
     let s:bad = '52'
-    let s:rare = '53'
+    let s:rare = '93'
     let s:column = '63'
 else
-	let s:fg = "Cyan" 
-	let s:literal = "Green"
-	let s:strong = "Blue" 
-	let s:emph = "White"
-	let s:auto = "DarkGreen"
-	let s:error = "DarkRed"
-	let s:remark = "DarkYellow"
+    let s:bg = "Black"
+    let s:emph = "White"
+    let s:auto = "DarkGreen"
+    let s:error = "DarkRed"
+    let s:remark = "DarkYellow"
     let s:highlight = "Blue"
-    let s:bar = "DarkGray"
-    let s:inactive = "Gray"
-    let s:active = "White"
-    let s:menu = "Yellow"
+    let s:special = "Yellow"
     let s:bad = "Red"
     let s:rare = "DarkMagenta"
     let s:column = "DarkBlue"
+    let s:active = "White"
+    let s:inactive = "Gray"
+
+    if s:colors >= 16
+        let s:fg = "Cyan"
+        let s:dim = "White"
+        let s:literal = "Green"
+        let s:strong = "Blue"
+        let s:bar = "DarkGray"
+        let s:menu = "Cyan"
+    else
+        " disable bold and underline of certain groups
+        let s:hi_bold = 'NONE'
+        let s:hi_underline = 'NONE'
+        " Remove bold from other groups (darker variants remove bold)
+        let s:fg = "DarkCyan"
+        let s:dim = "Gray"
+        let s:literal = "DarkGreen"
+        let s:strong = "DarkCyan"
+        " invert menu and bar in 8 color mode
+        let s:bar = "DarkCyan"
+        let s:menu = "Black"
+    end
 endif
 
-" basic highlight groups (:help highlight-groups)
-
 " text
-
 call s:hi('Normal', s:fg, s:bg, v:none)
 call s:hi('DiffChange', v:none, s:bg, v:none)
 call s:hi('DiffAdd', s:remark, s:bg, v:none)
 call s:hi('DiffText', s:remark, s:bg, 'NONE')
 call s:hi('DiffDelete', s:inactive, s:bg, 'NONE')
-call s:hi('Folded', s:active, s:bg, 'underline')
+call s:hi('Folded', s:active, s:bg, s:hi_underline)
 call s:hi('LineNr', s:inactive, s:bg, v:none)
 call s:hi('Directory', s:fg, s:bg, v:none)
-call s:hi('NonText', s:menu, s:bg, 'bold')
-call s:hi('SpecialKey', s:menu, s:bg, v:none)
+call s:hi('NonText', s:special, s:bg, 'bold')
+call s:hi('SpecialKey', s:special, s:bg, v:none)
 
 " spell-checking needs to be redefined only for terminal vim
 if !has('gui_running')
@@ -179,9 +195,8 @@ endif
 
 " borders / separators / menus
 " TODO: PMenu is dull and boring
-
 call s:hi('FoldColumn', s:active, s:bg, 'bold')
-call s:hi('SignColumn', s:active, s:bg, 'bold')
+call s:hi('SignColumn', v:none, s:bg, 'bold')
 call s:hi('Pmenu', s:inactive, s:bg, v:none)
 call s:hi('PmenuSel', s:emph, s:inactive, v:none)    
 call s:hi('PmenuSbar', v:none, s:inactive, v:none)
@@ -189,19 +204,14 @@ call s:hi('PmenuThumb', v:none, s:active, v:none)
 call s:hi('WildMenu', s:emph, s:rare, 'bold')
 call s:hi('VertSplit', s:bar, s:active, v:none)
 call s:hi('TabLine', s:menu, s:bar, 'NONE')
-call s:hi('TabLineSel', s:bar, s:menu, 'bold')
+call s:hi('TabLineSel', s:bar, s:menu, s:hi_bold)
 call s:hi('TabLineFill', s:bar, s:bar, v:none)
-call s:hi('StatusLine', s:emph, s:bar, 'NONE')
+call s:hi('StatusLine', s:menu, s:bar, 'NONE')
 call s:hi('StatusLineNC', s:inactive, s:bar, 'NONE')
 call s:hi('ColorColumn', v:none, s:column, v:none)
 
-"hi Scrollbar
-"hi Tooltip
-
 " cursor / dynamic / other
-
 call s:hi('Cursor', s:bg, s:fg, v:none)
-"call s:hi('CursorIM', s:bg, s:emph, 'reverse')
 call s:hi('CursorLine', v:none, s:bar, 'NONE')
 call s:hi('CursorColumn', v:none, s:bar, 'NONE')
 call s:hi('DebugStop', v:none, s:bar, 'NONE')
@@ -209,21 +219,16 @@ call s:hi('Visual', v:none, s:bar, v:none)
 call s:hi('Search', v:none, s:highlight, v:none)
 call s:hi('MatchParen', v:none, s:highlight, v:none)
 
-"hi IncSearch
-"hi VisualNOS
-
 " listings / messages
-
-call s:hi('Title', s:rare, v:none, 'bold')
+call s:hi('Title', s:rare, v:none, s:hi_bold)
 call s:hi('ErrorMsg', s:emph, s:error, 'bold')
-call s:hi('ModeMsg', s:menu, v:none, v:none)
-call s:hi('Question', s:menu, s:bg, v:none)
-call s:hi('MoreMsg', s:menu, s:bg, v:none)
-call s:hi('WarningMsg', s:menu, s:bg, 'bold')
+call s:hi('ModeMsg', s:special, v:none, v:none)
+call s:hi('Question', s:special, s:bg, v:none)
+call s:hi('MoreMsg', s:special, s:bg, v:none)
+call s:hi('WarningMsg', s:special, s:bg, 'bold')
 
 " syntax highlighting groups (:help group-name)
-
-call s:hi('Comment', s:active, s:bg, v:none)
+call s:hi('Comment', s:dim, s:bg, v:none)
 call s:hi('Statement', s:emph, s:bg, 'bold')
 call s:hi('Identifier', s:emph, s:bg, 'NONE')
 call s:hi('Keyword', s:emph, s:bg, 'NONE')
@@ -232,15 +237,22 @@ call s:hi('Delimiter', s:emph, s:bg, v:none)
 call s:hi('Error', s:emph, s:error, v:none)
 call s:hi('Function', s:strong, s:bg, v:none)
 call s:hi('Todo', s:remark, s:bg, 'bold')
-call s:hi('Underlined', s:fg, s:bg, 'underline')
+call s:hi('Underlined', s:fg, s:bg, s:hi_underline)
 call s:hi('Ignore', s:bar, s:bg, v:none)
 call s:hi('Constant', s:literal, s:bg, v:none)
 call s:hi('Number',   s:literal, s:bg, v:none)
-call s:hi('Special',  s:menu, s:bg, v:none)
+call s:hi('Special',  s:special, s:bg, v:none)
 call s:hi('PreProc',  s:auto, s:bg, v:none)
 call s:hi('Macro',    s:auto, s:bg, v:none)
 call s:hi('StorageClass', s:emph, s:bg, 'bold')
 call s:hi('Structure', s:emph, s:bg, 'bold')
 call s:hi('Type', s:emph, s:bg, 'NONE')
 
+" TODO: who knows
+"Scrollbar
+"Tooltip
+"CursorIM
+"IncSearch
+"VisualNOS
+"
 let &cpo = save_cpo

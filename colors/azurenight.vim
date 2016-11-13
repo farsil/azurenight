@@ -130,7 +130,7 @@ if s:colors >= 256
     let s:special = '229'
 
     let s:literal = '35'
-    let s:builtin = '33'
+    let s:function = '33'
     let s:emph = '252'
     let s:auto = '29'
     let s:error = '124'
@@ -152,7 +152,7 @@ else
     let s:special = 'Yellow'
 
     let s:literal = 'Green'
-    let s:builtin = 'Blue'
+    let s:function = 'Blue'
     let s:emph = 'White'
     let s:auto = 'DarkGreen'
     let s:error = 'Red'
@@ -184,7 +184,7 @@ call s:hi('Keyword', s:emph, s:bg, 'NONE')
 call s:hi('Operator', s:emph, s:bg, v:none)
 call s:hi('Delimiter', s:emph, s:bg, v:none)
 call s:hi('Error', s:emph, s:error, v:none)
-call s:hi('Function', s:builtin, s:bg, v:none)
+call s:hi('Function', s:function, s:bg, v:none)
 call s:hi('Todo', s:remark, s:bg, 'Bold')
 call s:hi('Underlined', s:fg, s:bg, 'Underline')
 call s:hi('Ignore', s:dim, s:bg, v:none)

@@ -1,17 +1,20 @@
 " Vim color file -- azurenight
 " Maintainer: farsil
 
+" only works with dark background
 set background=dark
-highlight clear
 
+" clear previous theme colors
+highlight clear
 if exists("syntax_on")
     syntax reset
 endif
 
-let g:colors_name = "azurenight"
-
+" backup compatibility settings
 let save_cpo = &cpo
 set cpo&vim
+
+let g:colors_name = "azurenight"
 
 if has('gui_running')
     " 0-15 standard xterm colors
@@ -119,96 +122,59 @@ end
 if s:colors >= 256
     let s:fg = '38'
     let s:bg = '233'
-    let s:literal = '35'
-    let s:strong = '33'
-    let s:emph = '252'
+
+    let s:deleted = '203'
+    let s:added = '47'
+    let s:remark = '202'
     let s:dim = '248'
+    let s:special = '229'
+
+    let s:literal = '35'
+    let s:builtin = '33'
+    let s:emph = '252'
     let s:auto = '29'
     let s:error = '124'
-    let s:remark = '202'
-    let s:highlight = '24'
-    let s:bar = '235'
-    let s:inactive = '243'
-    let s:active = '249'
-    let s:menu = '39'
-    let s:special = '229'
-    let s:bad = '52'
     let s:rare = '93'
+
+    let s:highlight = '24'
     let s:column = '63'
+    let s:bars = '235'
+    let s:passive = '243'
+    let s:active = '249'
 else
-    let s:bg = "Black"
-    let s:emph = "White"
-    let s:auto = "DarkGreen"
-    let s:error = "DarkRed"
-    let s:remark = "DarkYellow"
-    let s:highlight = "Blue"
-    let s:special = "Yellow"
-    let s:bad = "Red"
-    let s:rare = "DarkMagenta"
-    let s:column = "DarkBlue"
-    let s:active = "White"
-    let s:inactive = "Gray"
-    let s:fg = "Cyan"
-    let s:dim = "White"
-    let s:literal = "Green"
-    let s:strong = "Blue"
-    let s:bar = "DarkGray"
-    let s:menu = "Cyan"
+    let s:fg = 'Cyan'
+    let s:bg = 'Black'
+
+    let s:deleted = 'Red'
+    let s:added = 'Green'
+    let s:remark = 'DarkYellow'
+    let s:dim = 'White'
+    let s:special = 'Yellow'
+
+    let s:literal = 'Green'
+    let s:builtin = 'Blue'
+    let s:emph = 'White'
+    let s:auto = 'DarkGreen'
+    let s:error = 'Red'
+    let s:rare = 'DarkMagenta'
+
+    let s:highlight = 'Blue'
+    let s:column = 'DarkBlue'
+    let s:active = 'White'
+    let s:passive = 'Gray'
+    let s:bars = 'DarkGray'
 endif
 
-" text
+" normal text
 call s:hi('Normal', s:fg, s:bg, v:none)
 call s:hi('DiffChange', v:none, s:bg, v:none)
-call s:hi('DiffAdd', s:remark, s:bg, v:none)
-call s:hi('DiffText', s:remark, s:bg, 'NONE')
-call s:hi('DiffDelete', s:inactive, s:bg, 'NONE')
-call s:hi('Folded', s:active, s:bg, 'underline')
-call s:hi('LineNr', s:inactive, s:bg, v:none)
+call s:hi('DiffAdd', s:added, s:bg, v:none)
+call s:hi('DiffText', s:remark, s:bg, 'bold')
+call s:hi('DiffDelete', s:deleted, s:bg, 'NONE')
+call s:hi('Folded', s:dim, s:bg, 'underline')
 call s:hi('Directory', s:fg, s:bg, v:none)
 call s:hi('NonText', s:special, s:bg, 'bold')
 call s:hi('SpecialKey', s:special, s:bg, v:none)
-
-" spell-checking needs to be redefined only for terminal vim
-if !has('gui_running')
-    call s:hi('SpellBad', 'NONE', s:bad, v:none)
-    call s:hi('SpellCap', 'NONE', s:bad, v:none)
-    call s:hi('SpellLocal', 'NONE', s:bad, v:none)
-    call s:hi('SpellRare', 'NONE', s:rare, v:none)
-endif
-
-" borders / separators / menus
-" TODO: PMenu is dull and boring
-call s:hi('FoldColumn', s:active, s:bg, 'bold')
-call s:hi('SignColumn', v:none, s:bg, 'bold')
-call s:hi('Pmenu', s:inactive, s:bg, v:none)
-call s:hi('PmenuSel', s:emph, s:inactive, v:none)    
-call s:hi('PmenuSbar', v:none, s:inactive, v:none)
-call s:hi('PmenuThumb', v:none, s:active, v:none)
-call s:hi('WildMenu', s:emph, s:rare, 'bold')
-call s:hi('VertSplit', s:bar, s:active, v:none)
-call s:hi('TabLine', s:menu, s:bar, 'NONE')
-call s:hi('TabLineSel', s:bar, s:menu, 'bold')
-call s:hi('TabLineFill', s:bar, s:bar, v:none)
-call s:hi('StatusLine', s:menu, s:bar, 'NONE')
-call s:hi('StatusLineNC', s:inactive, s:bar, 'NONE')
-call s:hi('ColorColumn', v:none, s:column, v:none)
-
-" cursor / dynamic / other
-call s:hi('Cursor', s:bg, s:fg, v:none)
-call s:hi('CursorLine', v:none, s:bar, 'NONE')
-call s:hi('CursorColumn', v:none, s:bar, 'NONE')
-call s:hi('DebugStop', v:none, s:bar, 'NONE')
-call s:hi('Visual', v:none, s:bar, v:none)
-call s:hi('Search', v:none, s:highlight, v:none)
-call s:hi('MatchParen', v:none, s:highlight, v:none)
-
-" listings / messages
-call s:hi('Title', s:rare, v:none, 'bold')
-call s:hi('ErrorMsg', s:emph, s:error, 'bold')
-call s:hi('ModeMsg', s:special, v:none, v:none)
-call s:hi('Question', s:special, s:bg, v:none)
-call s:hi('MoreMsg', s:special, s:bg, v:none)
-call s:hi('WarningMsg', s:special, s:bg, 'bold')
 
 " syntax highlighting groups (:help group-name)
 call s:hi('Comment', s:dim, s:bg, v:none)
@@ -218,10 +184,10 @@ call s:hi('Keyword', s:emph, s:bg, 'NONE')
 call s:hi('Operator', s:emph, s:bg, v:none)
 call s:hi('Delimiter', s:emph, s:bg, v:none)
 call s:hi('Error', s:emph, s:error, v:none)
-call s:hi('Function', s:strong, s:bg, v:none)
+call s:hi('Function', s:builtin, s:bg, v:none)
 call s:hi('Todo', s:remark, s:bg, 'bold')
 call s:hi('Underlined', s:fg, s:bg, 'underline')
-call s:hi('Ignore', s:bar, s:bg, v:none)
+call s:hi('Ignore', s:dim, s:bg, v:none)
 call s:hi('Constant', s:literal, s:bg, v:none)
 call s:hi('Number', s:literal, s:bg, v:none)
 call s:hi('Special', s:special, s:bg, v:none)
@@ -230,6 +196,49 @@ call s:hi('Macro', s:auto, s:bg, v:none)
 call s:hi('StorageClass', s:emph, s:bg, 'bold')
 call s:hi('Structure', s:emph, s:bg, 'bold')
 call s:hi('Type', s:emph, s:bg, 'NONE')
+
+" listings / messages
+call s:hi('Title', s:rare, v:none, 'bold')
+call s:hi('ErrorMsg', s:emph, s:error, 'bold')
+call s:hi('ModeMsg', s:special, v:none, v:none)
+call s:hi('Question', s:special, s:bg, v:none)
+call s:hi('MoreMsg', s:special, s:bg, v:none)
+call s:hi('WarningMsg', s:special, s:bg, 'bold')
+
+" spell-checking needs to be redefined only for terminal vim
+if !has('gui_running')
+    call s:hi('SpellBad', 'NONE', s:error, v:none)
+    call s:hi('SpellCap', 'NONE', s:error, v:none)
+    call s:hi('SpellLocal', 'NONE', s:error, v:none)
+    call s:hi('SpellRare', 'NONE', s:rare, v:none)
+endif
+
+" borders / separators / menus
+" TODO: PMenu is dull and boring
+call s:hi('FoldColumn', s:passive, s:bg, 'bold')
+call s:hi('SignColumn', v:none, s:bg, 'bold')
+call s:hi('Pmenu', s:passive, s:bg, v:none)
+call s:hi('PmenuSel', s:active, s:passive, v:none)
+call s:hi('PmenuSbar', v:none, s:passive, v:none)
+call s:hi('PmenuThumb', v:none, s:active, v:none)
+call s:hi('WildMenu', s:active, s:rare, 'bold')
+call s:hi('VertSplit', s:bars, s:passive, v:none)
+call s:hi('TabLine', s:fg, s:bars, 'NONE')
+call s:hi('TabLineSel', s:bars, s:fg, 'bold')
+call s:hi('TabLineFill', s:bars, s:bars, v:none)
+call s:hi('StatusLine', s:fg, s:bars, 'NONE')
+call s:hi('StatusLineNC', s:passive, s:bars, 'NONE')
+call s:hi('ColorColumn', v:none, s:column, v:none)
+call s:hi('LineNr', s:passive, s:bg, v:none)
+
+" cursor / dynamic / other
+call s:hi('Cursor', s:bg, s:fg, v:none)
+call s:hi('CursorLine', v:none, s:bars, 'NONE')
+call s:hi('CursorColumn', v:none, s:bars, 'NONE')
+call s:hi('DebugStop', v:none, s:bars, 'NONE')
+call s:hi('Visual', v:none, s:bars, v:none)
+call s:hi('Search', v:none, s:highlight, v:none)
+call s:hi('MatchParen', v:none, s:highlight, v:none)
 
 " TODO: who knows
 "Scrollbar

@@ -141,6 +141,11 @@ if s:colors >= 256
     let s:bars = '235'
     let s:passive = '243'
     let s:active = '249'
+
+    let s:info = '23'
+    let s:modinfo = '143'
+    let s:buffer = '35'
+    let s:bufinfo = '29'
 else
     let s:fg = 'Cyan'
     let s:bg = 'Black'
@@ -163,6 +168,11 @@ else
     let s:active = 'White'
     let s:passive = 'Gray'
     let s:bars = 'DarkGray'
+
+    let s:info = 'DarkCyan'
+    let s:modinfo = 'DarkYellow'
+    let s:buffer = 'Green'
+    let s:bufinfo = 'DarkGreen'
 endif
 
 " normal text
@@ -236,9 +246,28 @@ call s:hi('Cursor', s:bg, s:fg, v:none)
 call s:hi('CursorLine', v:none, s:bars, 'NONE')
 call s:hi('CursorColumn', v:none, s:bars, 'NONE')
 call s:hi('DebugStop', v:none, s:bars, 'NONE')
+
 call s:hi('Visual', v:none, s:bars, v:none)
 call s:hi('Search', v:none, s:highlight, v:none)
 call s:hi('MatchParen', v:none, s:highlight, v:none)
+
+" airline, normally ignored
+call s:hi('AirlineNormalMode', s:bars, s:fg, 'Bold')
+call s:hi('AirlineNormalInfo', s:bg, s:info, 'Bold')
+
+call s:hi('AirlineInsertMode', s:bars, s:special, 'Bold')
+call s:hi('AirlineInsertInfo', s:bg, s:modinfo, v:none)
+
+call s:hi('AirlineReplaceMode', s:error, s:emph, 'Bold')
+call s:hi('AirlineReplaceInfo', s:bg, s:passive, v:none)
+
+call s:hi('AirlineVisualMode', s:bars, s:buffer, 'Bold')
+call s:hi('AirlineVisualInfo', s:bg, s:bufinfo, v:none)
+
+call s:hi('AirlineModified', s:special, s:bars, v:none)
+call s:hi('AirlineBar', s:emph, s:bars, v:none)
+call s:hi('AirlineRemark', s:remark, s:bars, 'Bold')
+call s:hi('AirlineInactive', s:passive, s:bars, v:none)
 
 " TODO: who knows
 "Scrollbar

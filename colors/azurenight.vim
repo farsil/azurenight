@@ -9,11 +9,6 @@ if exists("syntax_on")
 endif
 
 let g:colors_name = "azurenight"
-let s:colors = 256
-
-" active while not in framebuffer console mode 
-let s:fb_nobold = 'bold'
-let s:fb_nounderline = 'underline'
 
 let save_cpo = &cpo
 set cpo&vim
@@ -101,6 +96,8 @@ if has('gui_running')
         endif
         exec l:cmd
     endfunction
+
+    let s:colors = 256
 else
     function! s:hi(item, fg, bg, style)
         let l:cmd = "hi " . a:item
@@ -151,27 +148,12 @@ else
     let s:column = "DarkBlue"
     let s:active = "White"
     let s:inactive = "Gray"
-
-    if s:colors >= 16
-        let s:fg = "Cyan"
-        let s:dim = "White"
-        let s:literal = "Green"
-        let s:strong = "Blue"
-        let s:bar = "DarkGray"
-        let s:menu = "Cyan"
-    else
-        " disable bold and underline of certain groups
-        let s:fb_nobold = 'NONE'
-        let s:fb_nounderline = 'NONE'
-        " Remove bold from other groups (darker variants remove bold)
-        let s:fg = "DarkCyan"
-        let s:dim = "Gray"
-        let s:literal = "DarkGreen"
-        let s:strong = "DarkCyan"
-        " invert menu and bar in framebuffer console mode
-        let s:bar = "DarkCyan"
-        let s:menu = "Black"
-    end
+    let s:fg = "Cyan"
+    let s:dim = "White"
+    let s:literal = "Green"
+    let s:strong = "Blue"
+    let s:bar = "DarkGray"
+    let s:menu = "Cyan"
 endif
 
 " text
@@ -180,7 +162,7 @@ call s:hi('DiffChange', v:none, s:bg, v:none)
 call s:hi('DiffAdd', s:remark, s:bg, v:none)
 call s:hi('DiffText', s:remark, s:bg, 'NONE')
 call s:hi('DiffDelete', s:inactive, s:bg, 'NONE')
-call s:hi('Folded', s:active, s:bg, s:fb_nounderline)
+call s:hi('Folded', s:active, s:bg, 'underline')
 call s:hi('LineNr', s:inactive, s:bg, v:none)
 call s:hi('Directory', s:fg, s:bg, v:none)
 call s:hi('NonText', s:special, s:bg, 'bold')
@@ -205,7 +187,7 @@ call s:hi('PmenuThumb', v:none, s:active, v:none)
 call s:hi('WildMenu', s:emph, s:rare, 'bold')
 call s:hi('VertSplit', s:bar, s:active, v:none)
 call s:hi('TabLine', s:menu, s:bar, 'NONE')
-call s:hi('TabLineSel', s:bar, s:menu, s:fb_nobold)
+call s:hi('TabLineSel', s:bar, s:menu, 'bold')
 call s:hi('TabLineFill', s:bar, s:bar, v:none)
 call s:hi('StatusLine', s:menu, s:bar, 'NONE')
 call s:hi('StatusLineNC', s:inactive, s:bar, 'NONE')
@@ -221,7 +203,7 @@ call s:hi('Search', v:none, s:highlight, v:none)
 call s:hi('MatchParen', v:none, s:highlight, v:none)
 
 " listings / messages
-call s:hi('Title', s:rare, v:none, s:fb_nobold)
+call s:hi('Title', s:rare, v:none, 'bold')
 call s:hi('ErrorMsg', s:emph, s:error, 'bold')
 call s:hi('ModeMsg', s:special, v:none, v:none)
 call s:hi('Question', s:special, s:bg, v:none)
@@ -238,7 +220,7 @@ call s:hi('Delimiter', s:emph, s:bg, v:none)
 call s:hi('Error', s:emph, s:error, v:none)
 call s:hi('Function', s:strong, s:bg, v:none)
 call s:hi('Todo', s:remark, s:bg, 'bold')
-call s:hi('Underlined', s:fg, s:bg, s:fb_nounderline)
+call s:hi('Underlined', s:fg, s:bg, 'underline')
 call s:hi('Ignore', s:bar, s:bg, v:none)
 call s:hi('Constant', s:literal, s:bg, v:none)
 call s:hi('Number', s:literal, s:bg, v:none)

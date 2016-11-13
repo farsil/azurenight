@@ -1,71 +1,72 @@
 " Vim airline theme -- azurenight
 " Maintainer: farsil
 
-let g:airline#themes#azurenight#palette = {}
+" Default section contents
+" section_a     (mode, crypt, paste, spell, iminsert)
+" section_b     (hunks, branch)
+" section_c     (bufferline or filename)
+" section_x     (tagbar, filetype, virtualenv)
+" section_y     (fileencoding, fileformat)
+" section_z     (percentage, line number, column number)
 
-function! airline#themes#azurenight#refresh()
-    let g:airline#themes#azurenight#palette.accents = {
-        \ 'red': airline#themes#get_highlight('Constant'),
-        \ }
+function! s:rhl(group)
+    let l:fg = synIDattr(synIDtrans(hlID(a:group)), 'fg')
+    let l:bg = synIDattr(synIDtrans(hlID(a:group)), 'bg')
 
-    let s:N1 = airline#themes#get_highlight2(['Normal', 'bg'], 
-        \ ['Directory', 'fg'], 'bold')
-    let s:N2 = airline#themes#get_highlight('Pmenu')
-    let s:N3 = airline#themes#get_highlight('CursorLine')
+    " TODO: support multiple styles
+    if synIDattr(synIDtrans(hlID(a:group)), 'bold')
+        let l:style = 'bold'
+    elseif synIDattr(synIDtrans(hlID(a:group)), 'underline')
+        let l:style = 'underline'
+    else
+        let l:style = ''
+    endif
 
-    let g:airline#themes#azurenight#palette.normal = 
-        \ airline#themes#generate_color_map(s:N1, s:N2, s:N3)
+    if has('gui_running')
+        return [ l:fg, l:bg, '', '', l:style ]
+    else
+        return [ '', '', l:fg, l:bg, l:style ]
+    endif
+endfunction
 
-    let group = airline#themes#get_highlight('vimCommand')
+function! s:sp(palette, section, group)
+    if !has_key(g:airline#themes#azurenight#palette, a:palette)
+        let g:airline#themes#azurenight#palette[a:palette] = {}
+    endif
 
-    let g:airline#themes#azurenight#palette.normal_modified = {
-        \ 'airline_c': [ group[0], '', group[2], '', '' ]
-        \ }
+    let g:airline#themes#azurenight#palette[a:palette][a:section] =
+        \ s:rhl(a:group)
+endfunction
 
-    let s:I1 = airline#themes#get_highlight2(['Normal', 'bg'], 
-        \ ['MoreMsg', 'fg'], 'bold')
-    let s:I2 = airline#themes#get_highlight2(['MoreMsg', 'fg'], 
-        \ ['Normal', 'bg'])
-    let s:I3 = s:N3
+function! s:spg(palette, group_a, group_b, group_c)
+    let l:hla = s:rhl(a:group_a)
+    let l:hlb = s:rhl(a:group_b)
+    let l:hlc = s:rhl(a:group_c)
 
-    let g:airline#themes#azurenight#palette.insert = 
-        \ airline#themes#generate_color_map(s:I1, s:I2, s:I3)
-
-    let g:airline#themes#azurenight#palette.insert_modified = 
-        \ g:airline#themes#azurenight#palette.normal_modified
-
-    let s:R1 = airline#themes#get_highlight('Error', 'bold')
-    let s:R2 = s:N2
-    let s:R3 = s:N3
-
-    let g:airline#themes#azurenight#palette.replace = 
-        \ airline#themes#generate_color_map(s:R1, s:R2, s:R3)
-
-    let g:airline#themes#azurenight#palette.replace_modified = 
-        \ g:airline#themes#azurenight#palette.normal_modified
-
-    let s:V1 = airline#themes#get_highlight2(['Normal', 'bg'], 
-        \ ['Constant', 'fg'], 'bold')
-    let s:V2 = airline#themes#get_highlight2(['Constant', 'fg'], 
-        \ ['Normal', 'bg'])
-    let s:V3 = s:N3
-
-    let g:airline#themes#azurenight#palette.visual = 
-        \ airline#themes#generate_color_map(s:V1, s:V2, s:V3)
-
-    let g:airline#themes#azurenight#palette.visual_modified = 
-        \ g:airline#themes#azurenight#palette.normal_modified
-
-    let s:IA = airline#themes#get_highlight2(['NonText', 'fg'], 
-        \ ['CursorLine', 'bg'])
-
-    let g:airline#themes#azurenight#palette.inactive = 
-        \ airline#themes#generate_color_map(s:IA, s:IA, s:IA)
-
-    let g:airline#themes#azurenight#palette.inactive_modified = {
-        \ 'airline_c': [ group[0], '', group[2], '', '' ]
+    let g:airline#themes#azurenight#palette[a:palette] = {
+        \ 'airline_a': [ l:hla[0], l:hla[1], l:hla[2], l:hla[3], l:hla[4] ],
+        \ 'airline_b': [ l:hlb[0], l:hlb[1], l:hlb[2], l:hlb[3], l:hlb[4] ],
+        \ 'airline_c': [ l:hlc[0], l:hlc[1], l:hlc[2], l:hlc[3], l:hlc[4] ],
+        \ 'airline_x': [ l:hlc[0], l:hlc[1], l:hlc[2], l:hlc[3], '' ],
+        \ 'airline_y': [ l:hlb[0], l:hlb[1], l:hlb[2], l:hlb[3], '' ],
+        \ 'airline_z': [ l:hla[0], l:hla[1], l:hla[2], l:hla[3], '' ]
         \ }
 endfunction
 
-call airline#themes#azurenight#refresh()
+let g:airline#themes#azurenight#palette = {}
+
+call s:spg('normal', 'AirlineNormalMode', 'AirlineNormalInfo', 'AirlineBar')
+call s:sp('normal_modified', 'airline_c', 'AirlineModified')
+
+call s:spg('insert', 'AirlineInsertMode', 'AirlineInsertInfo', 'AirlineBar')
+call s:sp('insert_modified', 'airline_c', 'AirlineModified')
+
+call s:spg('replace', 'AirlineReplaceMode', 'AirlineReplaceInfo', 'AirlineBar')
+call s:sp('replace_modified', 'airline_c', 'AirlineModified')
+
+call s:spg('visual', 'AirlineVisualMode', 'AirlineVisualInfo', 'AirlineBar')
+call s:sp('visual_modified', 'airline_c', 'AirlineModified')
+
+call s:spg('inactive', 'AirlineInactive', 'AirlineInactive', 'AirlineInactive')
+call s:sp('accents', 'red', 'AirlineRemark')
 

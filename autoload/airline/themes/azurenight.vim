@@ -1,72 +1,71 @@
 " Vim airline theme -- azurenight
 " Maintainer: farsil
 
-" Default section contents
-" section_a     (mode, crypt, paste, spell, iminsert)
-" section_b     (hunks, branch)
-" section_c     (bufferline or filename)
-" section_x     (tagbar, filetype, virtualenv)
-" section_y     (fileencoding, fileformat)
-" section_z     (percentage, line number, column number)
+"   Airline section names
+" a > b > c       x < y < z
 
-function! s:rhl(group)
-    let l:fg = synIDattr(synIDtrans(hlID(a:group)), 'fg')
-    let l:bg = synIDattr(synIDtrans(hlID(a:group)), 'bg')
+if has('gui_running')
+    function! s:ab(fg, bg, style)
+        return [ g:cs_palette[a:fg], g:cs_palette[a:bg], '', '', a:style ]
+    endfunction
+else
+    function! s:ab(fg, bg, style)
+        return [ '', '', g:cs_palette[a:fg], g:cs_palette[a:bg], a:style ]
+    endfunction
+endif
 
-    " TODO: support multiple styles
-    if synIDattr(synIDtrans(hlID(a:group)), 'bold')
-        let l:style = 'bold'
-    elseif synIDattr(synIDtrans(hlID(a:group)), 'underline')
-        let l:style = 'underline'
-    else
-        let l:style = ''
-    endif
-
-    if has('gui_running')
-        return [ l:fg, l:bg, '', '', l:style ]
-    else
-        return [ '', '', l:fg, l:bg, l:style ]
-    endif
-endfunction
-
-function! s:sp(palette, section, group)
+function! s:ahi(palette, section, group)
     if !has_key(g:airline#themes#azurenight#palette, a:palette)
         let g:airline#themes#azurenight#palette[a:palette] = {}
     endif
 
     let g:airline#themes#azurenight#palette[a:palette][a:section] =
-        \ s:rhl(a:group)
+        \ s:ab(a:group[0], a:group[1], a:group[2])
 endfunction
 
-function! s:spg(palette, group_a, group_b, group_c)
-    let l:hla = s:rhl(a:group_a)
-    let l:hlb = s:rhl(a:group_b)
-    let l:hlc = s:rhl(a:group_c)
-
+function! s:ahig(palette, group_a, group_b, group_c)
     let g:airline#themes#azurenight#palette[a:palette] = {
-        \ 'airline_a': [ l:hla[0], l:hla[1], l:hla[2], l:hla[3], l:hla[4] ],
-        \ 'airline_b': [ l:hlb[0], l:hlb[1], l:hlb[2], l:hlb[3], l:hlb[4] ],
-        \ 'airline_c': [ l:hlc[0], l:hlc[1], l:hlc[2], l:hlc[3], l:hlc[4] ],
-        \ 'airline_x': [ l:hlc[0], l:hlc[1], l:hlc[2], l:hlc[3], '' ],
-        \ 'airline_y': [ l:hlb[0], l:hlb[1], l:hlb[2], l:hlb[3], '' ],
-        \ 'airline_z': [ l:hla[0], l:hla[1], l:hla[2], l:hla[3], '' ]
+        \ 'airline_a': s:ab(a:group_a[0], a:group_a[1], a:group_a[2]),
+        \ 'airline_b': s:ab(a:group_b[0], a:group_b[1], a:group_b[2]),
+        \ 'airline_c': s:ab(a:group_c[0], a:group_c[1], a:group_c[2]),
+        \ 'airline_x': s:ab(a:group_c[0], a:group_c[1], ''),
+        \ 'airline_y': s:ab(a:group_b[0], a:group_b[1], ''),
+        \ 'airline_z': s:ab(a:group_a[0], a:group_a[1], '')
         \ }
 endfunction
 
+" do not use v:none, airline does not accept it
+let s:normal_a = [ 'bg', 'fg', 'Bold' ]
+let s:normal_b = [ 'active', 'info', '' ]
+let s:insert_a = [ 'bg', 'special', 'Bold' ]
+let s:insert_b = [ 'bg', 'modinfo', '' ]
+let s:replace_a = [ 'error', 'emph', 'Bold' ]
+let s:replace_b = [ 'bg', 'passive', '' ]
+let s:visual_a = [ 'bg', 'buffer', 'Bold' ]
+let s:visual_b = [ 'bg', 'bufinfo', '' ]
+let s:filename = [ 'emph', 'bars', '' ]
+let s:modified = [ 'special', 'bars', '' ]
+let s:inactive = [ 'passive', 'bars', '' ]
+let s:accent = [ 'remark', 'bars', 'Bold' ]
+
 let g:airline#themes#azurenight#palette = {}
 
-call s:spg('normal', 'AirlineNormalMode', 'AirlineNormalInfo', 'AirlineBar')
-call s:sp('normal_modified', 'airline_c', 'AirlineModified')
+call s:ahig('normal', s:normal_a, s:normal_b, s:filename)
+call s:ahi('normal_modified', 'airline_c', s:modified)
 
-call s:spg('insert', 'AirlineInsertMode', 'AirlineInsertInfo', 'AirlineBar')
-call s:sp('insert_modified', 'airline_c', 'AirlineModified')
+call s:ahig('insert', s:insert_a, s:insert_b, s:filename)
+call s:ahi('insert_modified', 'airline_c', s:modified)
 
-call s:spg('replace', 'AirlineReplaceMode', 'AirlineReplaceInfo', 'AirlineBar')
-call s:sp('replace_modified', 'airline_c', 'AirlineModified')
+call s:ahig('replace', s:replace_a, s:replace_b, s:filename)
+call s:ahi('replace_modified', 'airline_c', s:modified)
 
-call s:spg('visual', 'AirlineVisualMode', 'AirlineVisualInfo', 'AirlineBar')
-call s:sp('visual_modified', 'airline_c', 'AirlineModified')
+call s:ahig('visual', s:visual_a, s:visual_b, s:filename)
+call s:ahi('visual_modified', 'airline_c', s:modified)
 
-call s:spg('inactive', 'AirlineInactive', 'AirlineInactive', 'AirlineInactive')
-call s:sp('accents', 'red', 'AirlineRemark')
+call s:ahig('inactive', s:inactive, s:inactive, s:inactive)
+call s:ahi('accents', 'red', s:accent)
+
+" tabline colors (WIP)
+call s:ahi('tabline', 'airline_tabsel', s:normal_a)
+call s:ahi('tabline', 'airline_tab', s:normal_b)
 

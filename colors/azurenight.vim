@@ -16,10 +16,15 @@ set cpo&vim
 
 let g:colors_name = 'azurenight'
 
+" share the palette
+" this has the advantage of keeping the complexity of color capability
+" detection in one place
+let g:cs_palette = {}
+
 if has('gui_running')
     " 0-15 standard color names
     " 16-256  256-color terminal palette
-    let s:color_map = {
+    let s:rgb_map = {
         \ 0: 'Black', 1: 'DarkRed', 2: 'DarkGreen', 3: 'DarkYellow',
         \ 4: 'DarkBlue', 5: 'DarkMagenta', 6: 'DarkCyan', 7: 'Grey',
         \ 8: 'DarkGrey', 9: 'Red', 10: 'Green', 11: 'Yellow',
@@ -86,188 +91,153 @@ if has('gui_running')
         \ 252: '#D8D8D8', 253: '#E0E0E0', 254: '#E9E9E9', 255: '#F1F1F1'
     \ }
 
-    function! s:hi(item, fg, bg, style)
-        let l:cmd = 'hi ' . a:item
+    let s:colors = 256
+
+    function! s:cmap(color)
+        return get(s:rgb_map, a:color, a:color)
+    endfunction
+
+    function! s:hi(group, fg, bg, style)
+        let l:cmd = 'hi ' . a:group
         if a:fg != v:none
-            let l:cmd = l:cmd . ' guifg=' . get(s:color_map, a:fg, a:fg)
+            let l:cmd = l:cmd . ' guifg='. g:cs_palette[a:fg]
         endif
         if a:bg != v:none
-            let l:cmd = l:cmd . ' guibg=' . get(s:color_map, a:bg, a:bg)
+            let l:cmd = l:cmd . ' guibg='. g:cs_palette[a:bg]
         endif
         if a:style != v:none
             let l:cmd = l:cmd . ' gui=' . a:style
         endif
         exec l:cmd
     endfunction
-
-    let s:colors = 256
 else
-    function! s:hi(item, fg, bg, style)
-        let l:cmd = 'hi ' . a:item
+    let s:colors = &t_Co
+
+    " does nothing in 256 color mode
+    function! s:cmap(color)
+        return a:color
+    endfunction
+
+    function! s:hi(group, fg, bg, style)
+        let l:cmd = 'hi ' . a:group
         if a:fg != v:none
-            let l:cmd = l:cmd . ' ctermfg=' . a:fg
+            let l:cmd = l:cmd . ' ctermfg=' . g:cs_palette[a:fg]
         endif
         if a:bg != v:none
-            let l:cmd = l:cmd . ' ctermbg=' . a:bg
+            let l:cmd = l:cmd . ' ctermbg=' . g:cs_palette[a:bg]
         endif
         if a:style != v:none
             let l:cmd = l:cmd . ' cterm=' . a:style
         endif
         exec l:cmd
     endfunction
-
-    let s:colors = &t_Co
 end
 
 if s:colors >= 256
-    let s:fg = '38'
-    let s:bg = '233'
-
-    let s:deleted = '203'
-    let s:added = '47'
-    let s:remark = '202'
-    let s:dim = '248'
-    let s:special = '229'
-
-    let s:literal = '35'
-    let s:function = '33'
-    let s:emph = '252'
-    let s:auto = '29'
-    let s:error = '124'
-    let s:rare = '93'
-
-    let s:highlight = '24'
-    let s:column = '63'
-    let s:bars = '235'
-    let s:passive = '243'
-    let s:active = '249'
-
-    let s:info = '23'
-    let s:modinfo = '143'
-    let s:buffer = '35'
-    let s:bufinfo = '29'
+    let g:cs_palette = {
+        \ 'fg'      : s:cmap('38'),  'bg'       : s:cmap('233'),
+        \ 'deleted' : s:cmap('203'), 'added'    : s:cmap('47'),
+        \ 'remark'  : s:cmap('202'), 'dim'      : s:cmap('248'),
+        \ 'special' : s:cmap('229'), 'literal'  : s:cmap('35'),
+        \ 'function': s:cmap('33'),  'emph'     : s:cmap('252'),
+        \ 'auto'    : s:cmap('29'),  'error'    : s:cmap('124'),
+        \ 'rare'    : s:cmap('93'),  'highlight': s:cmap('24'),
+        \ 'column'  : s:cmap('63'),  'bars'     : s:cmap('235'),
+        \ 'passive' : s:cmap('243'), 'active'   : s:cmap('249'),
+        \ 'info'    : s:cmap('23'),  'modinfo'  : s:cmap('143'),
+        \ 'buffer'  : s:cmap('35'),  'bufinfo'  : s:cmap('29')
+    \ }
 else
-    let s:fg = 'Cyan'
-    let s:bg = 'Black'
-
-    let s:deleted = 'Red'
-    let s:added = 'Green'
-    let s:remark = 'DarkYellow'
-    let s:dim = 'White'
-    let s:special = 'Yellow'
-
-    let s:literal = 'Green'
-    let s:function = 'Blue'
-    let s:emph = 'White'
-    let s:auto = 'DarkGreen'
-    let s:error = 'Red'
-    let s:rare = 'DarkMagenta'
-
-    let s:highlight = 'Blue'
-    let s:column = 'DarkBlue'
-    let s:active = 'White'
-    let s:passive = 'Gray'
-    let s:bars = 'DarkGray'
-
-    let s:info = 'DarkCyan'
-    let s:modinfo = 'DarkYellow'
-    let s:buffer = 'Green'
-    let s:bufinfo = 'DarkGreen'
+    let g:cs_palette = {
+        \ 'fg'      : 'Cyan',        'bg'       : 'Black',
+        \ 'deleted' : 'Red',         'added'    : 'Green',
+        \ 'remark'  : 'DarkYellow',  'dim'      : 'White',
+        \ 'special' : 'Yellow',      'literal'  : 'Green',
+        \ 'function': 'Blue',        'emph'     : 'White',
+        \ 'auto'    : 'DarkGreen',   'error'    : 'Red',
+        \ 'rare'    : 'DarkMagenta', 'highlight': 'Blue',
+        \ 'column'  : 'DarkBlue',    'active'   : 'White',
+        \ 'passive' : 'Gray',        'bars'     : 'DarkGray',
+        \ 'info'    : 'DarkCyan',    'modinfo'  : 'DarkYellow',
+        \ 'buffer'  : 'Green',       'bufinfo'  : 'DarkGreen'
+    \ }
 endif
 
 " normal text
-call s:hi('Normal', s:fg, s:bg, v:none)
-call s:hi('DiffChange', v:none, s:bg, v:none)
-call s:hi('DiffAdd', s:added, s:bg, v:none)
-call s:hi('DiffText', s:remark, s:bg, 'Bold')
-call s:hi('DiffDelete', s:deleted, s:bg, 'NONE')
-call s:hi('Folded', s:dim, s:bg, 'Underline')
-call s:hi('Directory', s:fg, s:bg, v:none)
-call s:hi('NonText', s:special, s:bg, 'Bold')
-call s:hi('SpecialKey', s:special, s:bg, v:none)
+call s:hi('Normal', 'fg', 'bg', v:none)
+call s:hi('DiffChange', v:none, 'bg', v:none)
+call s:hi('DiffAdd', 'added', 'bg', v:none)
+call s:hi('DiffText', 'remark', 'bg', 'Bold')
+call s:hi('DiffDelete', 'deleted', 'bg', 'NONE')
+call s:hi('Folded', 'dim', 'bg', 'Underline')
+call s:hi('Directory', 'fg', 'bg', v:none)
+call s:hi('NonText', 'special', 'bg', 'Bold')
+call s:hi('SpecialKey', 'special', 'bg', v:none)
 
 " syntax highlighting groups (:help group-name)
-call s:hi('Comment', s:dim, s:bg, v:none)
-call s:hi('Statement', s:emph, s:bg, 'Bold')
-call s:hi('Identifier', s:emph, s:bg, 'NONE')
-call s:hi('Keyword', s:emph, s:bg, 'NONE')
-call s:hi('Operator', s:emph, s:bg, v:none)
-call s:hi('Delimiter', s:emph, s:bg, v:none)
-call s:hi('Error', s:emph, s:error, v:none)
-call s:hi('Function', s:function, s:bg, v:none)
-call s:hi('Todo', s:remark, s:bg, 'Bold')
-call s:hi('Underlined', s:fg, s:bg, 'Underline')
-call s:hi('Ignore', s:dim, s:bg, v:none)
-call s:hi('Constant', s:literal, s:bg, v:none)
-call s:hi('Number', s:literal, s:bg, v:none)
-call s:hi('Special', s:special, s:bg, v:none)
-call s:hi('PreProc', s:auto, s:bg, v:none)
-call s:hi('Macro', s:auto, s:bg, v:none)
-call s:hi('StorageClass', s:emph, s:bg, 'Bold')
-call s:hi('Structure', s:emph, s:bg, 'Bold')
-call s:hi('Type', s:emph, s:bg, 'NONE')
+call s:hi('Comment', 'dim', 'bg', v:none)
+call s:hi('Statement', 'emph', 'bg', 'Bold')
+call s:hi('Identifier', 'emph', 'bg', 'NONE')
+call s:hi('Keyword', 'emph', 'bg', 'NONE')
+call s:hi('Operator', 'emph', 'bg', v:none)
+call s:hi('Delimiter', 'emph', 'bg', v:none)
+call s:hi('Error', 'emph', 'error', v:none)
+call s:hi('Function', 'function', 'bg', v:none)
+call s:hi('Todo', 'remark', 'bg', 'Bold')
+call s:hi('Underlined', 'fg', 'bg', 'Underline')
+call s:hi('Ignore', 'dim', 'bg', v:none)
+call s:hi('Constant', 'literal', 'bg', v:none)
+call s:hi('Number', 'literal', 'bg', v:none)
+call s:hi('Special', 'special', 'bg', v:none)
+call s:hi('PreProc', 'auto', 'bg', v:none)
+call s:hi('Macro', 'auto', 'bg', v:none)
+call s:hi('StorageClass', 'emph', 'bg', 'Bold')
+call s:hi('Structure', 'emph', 'bg', 'Bold')
+call s:hi('Type', 'emph', 'bg', 'NONE')
 
 " listings / messages
-call s:hi('Title', s:rare, v:none, 'Bold')
-call s:hi('ErrorMsg', s:emph, s:error, 'Bold')
-call s:hi('ModeMsg', s:special, v:none, v:none)
-call s:hi('Question', s:special, s:bg, v:none)
-call s:hi('MoreMsg', s:special, s:bg, v:none)
-call s:hi('WarningMsg', s:special, s:bg, 'Bold')
+call s:hi('Title', 'rare', v:none, 'Bold')
+call s:hi('ErrorMsg', 'emph', 'error', 'Bold')
+call s:hi('ModeMsg', 'special', v:none, v:none)
+call s:hi('Question', 'special', 'bg', v:none)
+call s:hi('MoreMsg', 'special', 'bg', v:none)
+call s:hi('WarningMsg', 'special', 'bg', 'Bold')
 
 " spell-checking needs to be redefined only for terminal vim
 if !has('gui_running')
-    call s:hi('SpellBad', 'NONE', s:error, v:none)
-    call s:hi('SpellCap', 'NONE', s:error, v:none)
-    call s:hi('SpellLocal', 'NONE', s:error, v:none)
-    call s:hi('SpellRare', 'NONE', s:rare, v:none)
+    call s:hi('SpellBad', v:none, 'error', v:none)
+    call s:hi('SpellCap', v:none, 'error', v:none)
+    call s:hi('SpellLocal', v:none, 'error', v:none)
+    call s:hi('SpellRare', v:none, 'rare', v:none)
 endif
 
 " borders / separators / menus
 " TODO: PMenu is dull and boring
-call s:hi('FoldColumn', s:passive, s:bg, 'Bold')
-call s:hi('SignColumn', v:none, s:bg, 'Bold')
-call s:hi('Pmenu', s:passive, s:bg, v:none)
-call s:hi('PmenuSel', s:active, s:passive, v:none)
-call s:hi('PmenuSbar', v:none, s:passive, v:none)
-call s:hi('PmenuThumb', v:none, s:active, v:none)
-call s:hi('WildMenu', s:active, s:rare, 'Bold')
-call s:hi('VertSplit', s:bars, s:passive, v:none)
-call s:hi('TabLine', s:fg, s:bars, 'NONE')
-call s:hi('TabLineSel', s:bars, s:fg, 'Bold')
-call s:hi('TabLineFill', s:bars, s:bars, v:none)
-call s:hi('StatusLine', s:fg, s:bars, 'NONE')
-call s:hi('StatusLineNC', s:passive, s:bars, 'NONE')
-call s:hi('ColorColumn', v:none, s:column, v:none)
-call s:hi('LineNr', s:passive, s:bg, v:none)
+call s:hi('FoldColumn', 'passive', 'bg', 'Bold')
+call s:hi('SignColumn', v:none, 'bg', 'Bold')
+call s:hi('Pmenu', 'passive', 'bg', v:none)
+call s:hi('PmenuSel', 'active', 'passive', v:none)
+call s:hi('PmenuSbar', v:none, 'passive', v:none)
+call s:hi('PmenuThumb', v:none, 'active', v:none)
+call s:hi('WildMenu', 'active', 'rare', 'Bold')
+call s:hi('VertSplit', 'bars', 'passive', v:none)
+call s:hi('TabLine', 'fg', 'bars', 'NONE')
+call s:hi('TabLineSel', 'bars', 'fg', 'Bold')
+call s:hi('TabLineFill', 'bars', 'bars', v:none)
+call s:hi('StatusLine', 'fg', 'bars', 'NONE')
+call s:hi('StatusLineNC', 'passive', 'bars', 'NONE')
+call s:hi('ColorColumn', v:none, 'column', v:none)
+call s:hi('LineNr', 'passive', 'bg', v:none)
 
 " cursor / dynamic / other
-call s:hi('Cursor', s:bg, s:fg, v:none)
-call s:hi('CursorLine', v:none, s:bars, 'NONE')
-call s:hi('CursorColumn', v:none, s:bars, 'NONE')
-call s:hi('DebugStop', v:none, s:bars, 'NONE')
+call s:hi('Cursor', 'bg', 'fg', v:none)
+call s:hi('CursorLine', v:none, 'bars', 'NONE')
+call s:hi('CursorColumn', v:none, 'bars', 'NONE')
+call s:hi('DebugStop', v:none, 'bars', 'NONE')
 
-call s:hi('Visual', v:none, s:bars, v:none)
-call s:hi('Search', v:none, s:highlight, v:none)
-call s:hi('MatchParen', v:none, s:highlight, v:none)
-
-" airline, normally ignored
-call s:hi('AirlineNormalMode', s:bars, s:fg, 'Bold')
-call s:hi('AirlineNormalInfo', s:bg, s:info, 'Bold')
-
-call s:hi('AirlineInsertMode', s:bars, s:special, 'Bold')
-call s:hi('AirlineInsertInfo', s:bg, s:modinfo, v:none)
-
-call s:hi('AirlineReplaceMode', s:error, s:emph, 'Bold')
-call s:hi('AirlineReplaceInfo', s:bg, s:passive, v:none)
-
-call s:hi('AirlineVisualMode', s:bars, s:buffer, 'Bold')
-call s:hi('AirlineVisualInfo', s:bg, s:bufinfo, v:none)
-
-call s:hi('AirlineModified', s:special, s:bars, v:none)
-call s:hi('AirlineBar', s:emph, s:bars, v:none)
-call s:hi('AirlineRemark', s:remark, s:bars, 'Bold')
-call s:hi('AirlineInactive', s:passive, s:bars, v:none)
+call s:hi('Visual', v:none, 'bars', v:none)
+call s:hi('Search', v:none, 'highlight', v:none)
+call s:hi('MatchParen', v:none, 'highlight', v:none)
 
 " TODO: who knows
 "Scrollbar

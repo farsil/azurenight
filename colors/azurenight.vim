@@ -19,16 +19,16 @@ let g:colors_name = 'azurenight'
 " share the palette
 " this has the advantage of keeping the complexity of color capability
 " detection in one place
-let g:cs_palette = {}
+let g:colors_palette = {}
 
 if has('gui_running')
     function! s:hi(group, fg, bg, style)
         let l:cmd = 'hi ' . a:group
         if a:fg != v:none
-            let l:cmd = l:cmd . ' guifg='. g:cs_palette[a:fg]
+            let l:cmd = l:cmd . ' guifg='. g:colors_palette[a:fg]
         endif
         if a:bg != v:none
-            let l:cmd = l:cmd . ' guibg='. g:cs_palette[a:bg]
+            let l:cmd = l:cmd . ' guibg='. g:colors_palette[a:bg]
         endif
         if a:style != v:none
             let l:cmd = l:cmd . ' gui=' . a:style
@@ -36,27 +36,27 @@ if has('gui_running')
         exec l:cmd
     endfunction
 
-    let g:cs_palette = {
-        \ 'fg'      : '#00BFE5', 'bg'       : '#171717',
-        \ 'deleted' : '#FF6563', 'added'    : '#00FF66',
-        \ 'remark'  : '#FF6700', 'dim'      : '#B6B6B6',
-        \ 'special' : '#FDFFB4', 'literal'  : '#00C26F',
-        \ 'function': '#0096FF', 'emph'     : '#D8D8D8',
-        \ 'auto'    : '#009D72', 'error'    : '#D10000',
-        \ 'rare'    : '#AE00FF', 'highlight': '#00739E',
-        \ 'column'  : '#7868FF', 'bars'     : '#323232',
-        \ 'passive' : '#888888', 'active'   : '#BFBFBF',
-        \ 'info'    : '#009C9C', 'modinfo'  : '#BBBE66',
-        \ 'buffer'  : '#00C26F', 'bufinfo'  : '#009D72'
+    let g:colors_palette = {
+        \ 'fg'       : '#00BFE5', 'bg'       : '#171717',
+        \ 'deleted'  : '#FF6563', 'added'    : '#00FF66',
+        \ 'remark'   : '#FF6700', 'comment'  : '#B6B6B6',
+        \ 'special'  : '#FDFFB4', 'literal'  : '#00C26F',
+        \ 'function' : '#0096FF', 'bright'   : '#D8D8D8',
+        \ 'macro'    : '#009D72', 'error'    : '#D10000',
+        \ 'rare'     : '#AE00FF', 'highlight': '#00739E',
+        \ 'column'   : '#7868FF', 'bars'     : '#323232',
+        \ 'passive'  : '#888888', 'active'   : '#BFBFBF',
+        \ 'normaldim': '#009C9C', 'insertdim': '#BBBE66',
+        \ 'visual'   : '#00C26F', 'visualdim': '#009D72'
     \ }
 else
     function! s:hi(group, fg, bg, style)
         let l:cmd = 'hi ' . a:group
         if a:fg != v:none
-            let l:cmd = l:cmd . ' ctermfg=' . g:cs_palette[a:fg]
+            let l:cmd = l:cmd . ' ctermfg=' . g:colors_palette[a:fg]
         endif
         if a:bg != v:none
-            let l:cmd = l:cmd . ' ctermbg=' . g:cs_palette[a:bg]
+            let l:cmd = l:cmd . ' ctermbg=' . g:colors_palette[a:bg]
         endif
         if a:style != v:none
             let l:cmd = l:cmd . ' cterm=' . a:style
@@ -65,32 +65,32 @@ else
     endfunction
 
     if &t_Co >= 256
-        let g:cs_palette = {
-            \ 'fg'      : '38',  'bg'       : '233',
-            \ 'deleted' : '203', 'added'    : '47',
-            \ 'remark'  : '202', 'dim'      : '248',
-            \ 'special' : '229', 'literal'  : '35',
-            \ 'function': '33',  'emph'     : '252',
-            \ 'auto'    : '29',  'error'    : '124',
-            \ 'rare'    : '93',  'highlight': '24',
-            \ 'column'  : '63',  'bars'     : '235',
-            \ 'passive' : '243', 'active'   : '249',
-            \ 'info'    : '30',  'modinfo'  : '143',
-            \ 'buffer'  : '35',  'bufinfo'  : '29'
+        let g:colors_palette = {
+            \ 'fg'       : '38',  'bg'       : '233',
+            \ 'deleted'  : '203', 'added'    : '47',
+            \ 'remark'   : '202', 'comment'  : '248',
+            \ 'special'  : '229', 'literal'  : '35',
+            \ 'function' : '33',  'bright'   : '252',
+            \ 'macro'    : '29',  'error'    : '124',
+            \ 'rare'     : '93',  'highlight': '24',
+            \ 'column'   : '63',  'bars'     : '235',
+            \ 'passive'  : '243', 'active'   : '249',
+            \ 'normaldim': '30',  'insertdim': '143',
+            \ 'visual'   : '35',  'visualdim': '29'
         \ }
     else
-        let g:cs_palette = {
-            \ 'fg'      : 'Cyan',        'bg'       : 'Black',
-            \ 'deleted' : 'Red',         'added'    : 'Green',
-            \ 'remark'  : 'DarkYellow',  'dim'      : 'White',
-            \ 'special' : 'Yellow',      'literal'  : 'Green',
-            \ 'function': 'Blue',        'emph'     : 'White',
-            \ 'auto'    : 'DarkGreen',   'error'    : 'Red',
-            \ 'rare'    : 'DarkMagenta', 'highlight': 'Blue',
-            \ 'column'  : 'DarkBlue',    'active'   : 'White',
-            \ 'passive' : 'Gray',        'bars'     : 'DarkGray',
-            \ 'info'    : 'DarkCyan',    'modinfo'  : 'DarkYellow',
-            \ 'buffer'  : 'Green',       'bufinfo'  : 'DarkGreen'
+        let g:colors_palette = {
+            \ 'fg'       : 'Cyan',        'bg'       : 'Black',
+            \ 'deleted'  : 'Red',         'added'    : 'Green',
+            \ 'remark'   : 'DarkYellow',  'comment'  : 'White',
+            \ 'special'  : 'Yellow',      'literal'  : 'Green',
+            \ 'function' : 'Blue',        'bright'   : 'White',
+            \ 'macro'    : 'DarkGreen',   'error'    : 'Red',
+            \ 'rare'     : 'DarkMagenta', 'highlight': 'Blue',
+            \ 'column'   : 'DarkBlue',    'active'   : 'White',
+            \ 'passive'  : 'Gray',        'bars'     : 'DarkGray',
+            \ 'normaldim': 'DarkCyan',    'insertdim': 'DarkYellow',
+            \ 'visual'   : 'Green',       'visualdim': 'DarkGreen'
         \ }
     endif
 end
@@ -101,35 +101,35 @@ call s:hi('DiffChange', v:none, 'bg', v:none)
 call s:hi('DiffAdd', 'added', 'bg', v:none)
 call s:hi('DiffText', 'remark', 'bg', 'Bold')
 call s:hi('DiffDelete', 'deleted', 'bg', 'NONE')
-call s:hi('Folded', 'dim', 'bg', 'Underline')
+call s:hi('Folded', 'comment', 'bg', 'Underline')
 call s:hi('Directory', 'fg', 'bg', v:none)
 call s:hi('NonText', 'special', 'bg', 'Bold')
 call s:hi('SpecialKey', 'special', 'bg', v:none)
 
 " syntax highlighting groups (:help group-name)
-call s:hi('Comment', 'dim', 'bg', v:none)
-call s:hi('Statement', 'emph', 'bg', 'Bold')
-call s:hi('Identifier', 'emph', 'bg', 'NONE')
-call s:hi('Keyword', 'emph', 'bg', 'NONE')
-call s:hi('Operator', 'emph', 'bg', v:none)
-call s:hi('Delimiter', 'emph', 'bg', v:none)
-call s:hi('Error', 'emph', 'error', v:none)
+call s:hi('Comment', 'comment', 'bg', v:none)
+call s:hi('Statement', 'bright', 'bg', 'Bold')
+call s:hi('Identifier', 'bright', 'bg', 'NONE')
+call s:hi('Keyword', 'bright', 'bg', 'NONE')
+call s:hi('Operator', 'bright', 'bg', v:none)
+call s:hi('Delimiter', 'bright', 'bg', v:none)
+call s:hi('Error', 'bright', 'error', v:none)
 call s:hi('Function', 'function', 'bg', v:none)
 call s:hi('Todo', 'remark', 'bg', 'Bold')
 call s:hi('Underlined', 'fg', 'bg', 'Underline')
-call s:hi('Ignore', 'dim', 'bg', v:none)
+call s:hi('Ignore', 'comment', 'bg', v:none)
 call s:hi('Constant', 'literal', 'bg', v:none)
 call s:hi('Number', 'literal', 'bg', v:none)
 call s:hi('Special', 'special', 'bg', v:none)
-call s:hi('PreProc', 'auto', 'bg', v:none)
-call s:hi('Macro', 'auto', 'bg', v:none)
-call s:hi('StorageClass', 'emph', 'bg', 'Bold')
-call s:hi('Structure', 'emph', 'bg', 'Bold')
-call s:hi('Type', 'emph', 'bg', 'NONE')
+call s:hi('PreProc', 'macro', 'bg', v:none)
+call s:hi('Macro', 'macro', 'bg', v:none)
+call s:hi('StorageClass', 'bright', 'bg', 'Bold')
+call s:hi('Structure', 'bright', 'bg', 'Bold')
+call s:hi('Type', 'bright', 'bg', 'NONE')
 
 " listings / messages
 call s:hi('Title', 'rare', v:none, 'Bold')
-call s:hi('ErrorMsg', 'emph', 'error', 'Bold')
+call s:hi('ErrorMsg', 'bright', 'error', 'Bold')
 call s:hi('ModeMsg', 'special', v:none, v:none)
 call s:hi('Question', 'special', 'bg', v:none)
 call s:hi('MoreMsg', 'special', 'bg', v:none)
@@ -166,7 +166,6 @@ call s:hi('Cursor', 'bg', 'fg', v:none)
 call s:hi('CursorLine', v:none, 'bars', 'NONE')
 call s:hi('CursorColumn', v:none, 'bars', 'NONE')
 call s:hi('DebugStop', v:none, 'bars', 'NONE')
-
 call s:hi('Visual', v:none, 'bars', v:none)
 call s:hi('Search', v:none, 'highlight', v:none)
 call s:hi('MatchParen', v:none, 'highlight', v:none)

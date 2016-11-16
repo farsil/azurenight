@@ -6,11 +6,13 @@
 
 if has('gui_running')
     function! s:ab(fg, bg, style)
-        return [ g:cs_palette[a:fg], g:cs_palette[a:bg], '', '', a:style ]
+        return [ g:colors_palette[a:fg], g:colors_palette[a:bg],
+            \ '', '', a:style ]
     endfunction
 else
     function! s:ab(fg, bg, style)
-        return [ '', '', g:cs_palette[a:fg], g:cs_palette[a:bg], a:style ]
+        return [ '', '',
+            \ g:colors_palette[a:fg], g:colors_palette[a:bg], a:style ]
     endfunction
 endif
 
@@ -34,39 +36,41 @@ function! s:ahig(palette, group_a, group_b, group_c)
         \ }
 endfunction
 
+" if not done vim will complain
+let g:airline#themes#azurenight#palette = {}
+
 " do not use v:none, airline does not accept it
 let s:normal = [ 'bg', 'fg', 'Bold' ]
-let s:normal_dim = [ 'bg', 'info', '' ]
+let s:normal_dim = [ 'bg', 'normaldim', '' ]
 let s:normal_inv = [ 'fg', 'bars', 'Bold' ]
 let s:insert = [ 'bg', 'special', 'Bold' ]
-let s:insert_dim = [ 'bg', 'modinfo', '' ]
-let s:replace = [ 'error', 'emph', 'Bold' ]
+let s:insert_dim = [ 'bg', 'insertdim', '' ]
+let s:replace = [ 'error', 'bright', 'Bold' ]
 let s:replace_dim = [ 'bg', 'passive', '' ]
-let s:visual = [ 'bg', 'buffer', 'Bold' ]
-let s:visual_dim = [ 'bg', 'bufinfo', '' ]
-let s:filename = [ 'emph', 'bars', '' ]
+let s:visual = [ 'bg', 'visual', 'Bold' ]
+let s:visual_dim = [ 'bg', 'visualdim', '' ]
+let s:filename = [ 'bright', 'bars', '' ]
 let s:modified = [ 'special', 'bars', '' ]
 let s:inactive = [ 'passive', 'bars', '' ]
 let s:accent = [ 'remark', 'bars', 'Bold' ]
 
-let g:airline#themes#azurenight#palette = {}
-
+" main modes
 call s:ahig('normal', s:normal, s:normal_dim, s:filename)
-call s:ahi('normal_modified', 'airline_c', s:modified)
-
 call s:ahig('insert', s:insert, s:insert_dim, s:filename)
-call s:ahi('insert_modified', 'airline_c', s:modified)
-
 call s:ahig('replace', s:replace, s:replace_dim, s:filename)
-call s:ahi('replace_modified', 'airline_c', s:modified)
-
 call s:ahig('visual', s:visual, s:visual_dim, s:filename)
+
+" modified
+call s:ahi('normal_modified', 'airline_c', s:modified)
+call s:ahi('insert_modified', 'airline_c', s:modified)
+call s:ahi('replace_modified', 'airline_c', s:modified)
 call s:ahi('visual_modified', 'airline_c', s:modified)
 
+" other
 call s:ahig('inactive', s:inactive, s:inactive, s:inactive)
 call s:ahi('accents', 'red', s:accent)
 
-" tabline colors
+" tabline
 call s:ahi('tabline', 'airline_tabsel', s:normal)
 call s:ahi('tabline', 'airline_tab', s:normal_inv)
 call s:ahi('tabline', 'airline_tabtype', s:normal)
@@ -77,6 +81,7 @@ call s:ahi('tabline', 'airline_tabhid', s:inactive)
 
 " duplicate left side
 let s:tabpal = g:airline#themes#azurenight#palette['tabline']
+
 let s:tabpal['airline_tabsel_right'] = s:tabpal['airline_tabsel']
 let s:tabpal['airline_tab_right'] = s:tabpal['airline_tab']
 let s:tabpal['airline_tabtype_right'] = s:tabpal['airline_tabtype']

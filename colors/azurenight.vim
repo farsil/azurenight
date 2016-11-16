@@ -144,7 +144,7 @@ if s:colors >= 256
         \ 'rare'    : s:cmap('93'),  'highlight': s:cmap('24'),
         \ 'column'  : s:cmap('63'),  'bars'     : s:cmap('235'),
         \ 'passive' : s:cmap('243'), 'active'   : s:cmap('249'),
-        \ 'info'    : s:cmap('23'),  'modinfo'  : s:cmap('143'),
+        \ 'info'    : s:cmap('30'),  'modinfo'  : s:cmap('143'),
         \ 'buffer'  : s:cmap('35'),  'bufinfo'  : s:cmap('29')
     \ }
 else

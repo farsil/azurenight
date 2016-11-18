@@ -1,4 +1,4 @@
-" Vim airline theme -- azurenight
+" Vim airline theme -- rigel
 " Maintainer: farsil
 
 "   Airline section names
@@ -17,16 +17,16 @@ else
 endif
 
 function! s:ahi(palette, section, group)
-    if !has_key(g:airline#themes#azurenight#palette, a:palette)
-        let g:airline#themes#azurenight#palette[a:palette] = {}
+    if !has_key(g:airline#themes#rigel#palette, a:palette)
+        let g:airline#themes#rigel#palette[a:palette] = {}
     endif
 
-    let g:airline#themes#azurenight#palette[a:palette][a:section] =
+    let g:airline#themes#rigel#palette[a:palette][a:section] =
         \ s:ab(a:group[0], a:group[1], a:group[2])
 endfunction
 
 function! s:ahig(palette, group_a, group_b, group_c)
-    let g:airline#themes#azurenight#palette[a:palette] = {
+    let g:airline#themes#rigel#palette[a:palette] = {
         \ 'airline_a': s:ab(a:group_a[0], a:group_a[1], a:group_a[2]),
         \ 'airline_b': s:ab(a:group_b[0], a:group_b[1], a:group_b[2]),
         \ 'airline_c': s:ab(a:group_c[0], a:group_c[1], a:group_c[2]),
@@ -37,7 +37,7 @@ function! s:ahig(palette, group_a, group_b, group_c)
 endfunction
 
 " if not done vim will complain
-let g:airline#themes#azurenight#palette = {}
+let g:airline#themes#rigel#palette = {}
 
 " do not use v:none, airline does not accept it
 let s:normal = [ 'bg', 'fg', 'Bold' ]
@@ -80,7 +80,7 @@ call s:ahi('tabline', 'airline_tabmod_unsel', s:modified)
 call s:ahi('tabline', 'airline_tabhid', s:inactive)
 
 " duplicate left side
-let s:tabpal = g:airline#themes#azurenight#palette['tabline']
+let s:tabpal = g:airline#themes#rigel#palette['tabline']
 
 let s:tabpal['airline_tabsel_right'] = s:tabpal['airline_tabsel']
 let s:tabpal['airline_tab_right'] = s:tabpal['airline_tab']

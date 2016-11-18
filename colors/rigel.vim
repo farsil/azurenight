@@ -1,4 +1,4 @@
-" vim color file -- azurenight
+" vim color file -- rigel
 " Maintainer: farsil
 
 " only works with dark background
@@ -14,7 +14,7 @@ endif
 let save_cpo = &cpo
 set cpo&vim
 
-let g:colors_name = 'azurenight'
+let g:colors_name = 'rigel'
 
 " share the palette
 " this has the advantage of keeping the complexity of color capability

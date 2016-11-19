@@ -1,5 +1,5 @@
 # Rigel
-Cyan on black theme for both vim and vim-airline. Named after the blue star.
+A 256 colors cyan on black theme for both vim and vim-airline named after the blue star. Supports gvim and has a fallback 16 colors mode.
 
 ![Preview](https://farsil.github.io/rigel/images/screenshot.png)
 

@@ -37,17 +37,16 @@ if has('gui_running')
     endfunction
 
     let g:colors_palette = {
-        \ 'fg'       : '#00BFE5', 'bg'       : '#171717',
-        \ 'deleted'  : '#FF6563', 'added'    : '#00FF66',
-        \ 'remark'   : '#FF6700', 'comment'  : '#B6B6B6',
-        \ 'special'  : '#FDFFB4', 'literal'  : '#00C26F',
-        \ 'function' : '#0096FF', 'bright'   : '#D8D8D8',
-        \ 'macro'    : '#009D72', 'error'    : '#D10000',
-        \ 'rare'     : '#AE00FF', 'highlight': '#00739E',
-        \ 'column'   : '#7868FF', 'bars'     : '#323232',
-        \ 'passive'  : '#888888', 'active'   : '#BFBFBF',
-        \ 'normaldim': '#009C9C', 'insertdim': '#BBBE66',
-        \ 'visual'   : '#00C26F', 'visualdim': '#009D72'
+        \ 'fg'      : '#00BFE5', 'bg'        : '#171717',
+        \ 'deleted' : '#FF6563', 'added'     : '#00FF66',
+        \ 'remark'  : '#FF6700', 'comment'   : '#B6B6B6',
+        \ 'special' : '#FDFFB4', 'literal'   : '#00C26F',
+        \ 'function': '#0096FF', 'bright'    : '#D8D8D8',
+        \ 'macro'   : '#009D72', 'error'     : '#D10000',
+        \ 'rare'    : '#AE00FF', 'highlight' : '#00739E',
+        \ 'column'  : '#7868FF', 'bars'      : '#323232',
+        \ 'passive' : '#888888', 'active'    : '#BFBFBF',
+        \ 'fgdim'   : '#009C9C', 'specialdim': '#BBBE66',
     \ }
 else
     function! s:hi(group, fg, bg, style)
@@ -66,31 +65,30 @@ else
 
     if &t_Co >= 256
         let g:colors_palette = {
-            \ 'fg'       : '38',  'bg'       : '233',
-            \ 'deleted'  : '203', 'added'    : '47',
-            \ 'remark'   : '202', 'comment'  : '248',
-            \ 'special'  : '229', 'literal'  : '35',
-            \ 'function' : '33',  'bright'   : '252',
-            \ 'macro'    : '29',  'error'    : '124',
-            \ 'rare'     : '93',  'highlight': '24',
-            \ 'column'   : '63',  'bars'     : '235',
-            \ 'passive'  : '243', 'active'   : '249',
-            \ 'normaldim': '30',  'insertdim': '143',
-            \ 'visual'   : '35',  'visualdim': '29'
+            \ 'fg'      : '38',  'bg'        : '233',
+            \ 'deleted' : '203', 'added'     : '47',
+            \ 'remark'  : '202', 'comment'   : '248',
+            \ 'special' : '229', 'literal'   : '35',
+            \ 'function': '33',  'bright'    : '252',
+            \ 'macro'   : '29',  'error'     : '124',
+            \ 'rare'    : '93',  'highlight' : '24',
+            \ 'column'  : '63',  'bars'      : '235',
+            \ 'passive' : '243', 'active'    : '249',
+            \ 'fgdim'   : '30',  'specialdim': '143'
         \ }
+
     else
         let g:colors_palette = {
-            \ 'fg'       : 'Cyan',        'bg'       : 'Black',
-            \ 'deleted'  : 'Red',         'added'    : 'Green',
-            \ 'remark'   : 'DarkYellow',  'comment'  : 'White',
-            \ 'special'  : 'Yellow',      'literal'  : 'Green',
-            \ 'function' : 'Blue',        'bright'   : 'White',
-            \ 'macro'    : 'DarkGreen',   'error'    : 'Red',
-            \ 'rare'     : 'DarkMagenta', 'highlight': 'Blue',
-            \ 'column'   : 'DarkBlue',    'active'   : 'White',
-            \ 'passive'  : 'Gray',        'bars'     : 'DarkGray',
-            \ 'normaldim': 'DarkCyan',    'insertdim': 'DarkYellow',
-            \ 'visual'   : 'Green',       'visualdim': 'DarkGreen'
+            \ 'fg'      : 'Cyan',        'bg'        : 'Black',
+            \ 'deleted' : 'Red',         'added'     : 'Green',
+            \ 'remark'  : 'DarkYellow',  'comment'   : 'White',
+            \ 'special' : 'Yellow',      'literal'   : 'Green',
+            \ 'function': 'Blue',        'bright'    : 'White',
+            \ 'macro'   : 'DarkGreen',   'error'     : 'Red',
+            \ 'rare'    : 'DarkMagenta', 'highlight' : 'Blue',
+            \ 'column'  : 'DarkBlue',    'active'    : 'White',
+            \ 'passive' : 'Gray',        'bars'      : 'DarkGray',
+            \ 'fgdim'   : 'DarkCyan',    'specialdim': 'DarkYellow'
         \ }
     endif
 end

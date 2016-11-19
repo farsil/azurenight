@@ -1,6 +1,6 @@
 {
   "name": "Rigel",
   "tagline": "Cyan on black theme for both vim and vim-airline",
-  "body": "# Rigel\r\nCyan on black theme for both vim and vim-airline. Named after the blue star.\r\n\r\n# Credits\r\nThis theme is a variant of the Elda colorscheme\r\n(https://github.com/vim-scripts/Elda) with slightly different colors and\r\ncodebase.\r\n",
+  "body": "# Rigel\r\nCyan on black theme for both vim and vim-airline. Named after the blue star.\r\n\r\n![Preview](https://farsil.github.io/rigel/images/screenshot.png)\r\n\r\n# Credits\r\nThis theme is a variant of the Elda colorscheme\r\n(https://github.com/vim-scripts/Elda) with slightly different colors and\r\ncodebase.\r\n",
   "note": "Don't delete this file! It's used internally to help with page regeneration."
 }
